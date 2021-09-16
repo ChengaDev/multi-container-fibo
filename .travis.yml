@@ -1,0 +1,22 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t chengadev/fibo-clien-tests -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true chengadev/fibo-client npm test
+
+after_success:
+    - docker build -t chengadev/fibo-client-prod -f ./client
+    - docker build -t chengadev/fibo-nginx-prod -f ./nginx
+    - docker build -t chengadev/fibo-server-prod -f ./server
+    - docker build -t chengadev/fibo-worker-prod -f ./worker
+  # Login to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push images to Docker hub
+  - docker push chengadev/fibo-client-prod
+  - docker push chengadev/fibo-nginx-prod
+  - docker push chengadev/fibo-server-prod
+  - docker push chengadev/fibo-worker-prod
