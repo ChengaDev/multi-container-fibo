@@ -9,10 +9,10 @@ script:
     - docker run -e CI=true chengadev/fibo-client-tests npm test
 
 after_success:
-    - docker build -t chengadev/fibo-client-prod -f ./client
-    - docker build -t chengadev/fibo-nginx-prod -f ./nginx
-    - docker build -t chengadev/fibo-server-prod -f ./server
-    - docker build -t chengadev/fibo-worker-prod -f ./worker
+    - docker build -t chengadev/fibo-client-prod ./client
+    - docker build -t chengadev/fibo-nginx-prod ./nginx
+    - docker build -t chengadev/fibo-server-prod ./server
+    - docker build -t chengadev/fibo-worker-prod ./worker
     # Login to docker CLI
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     # Push images to Docker hub
