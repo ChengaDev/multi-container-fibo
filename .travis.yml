@@ -1,3 +1,4 @@
+language: ruby
 sudo: required
 services:
     - docker
@@ -5,8 +6,13 @@ services:
 before_install:
     - docker build -t chengadev/fibo-client-tests -f ./client/Dockerfile.dev ./client
 
+install:
+    - curl -L "https://get.spectralops.io/latest/x/sh?dsn=$SPECTRAL_DSN" | sh
+    - $HOME/.spectral/spectral --version
+
 script:
     - docker run -e CI=true chengadev/fibo-client-tests npm test
+    - $HOME/.spectral/spectral scan --ok
 
 after_success:
     - docker build -t chengadev/fibo-client-prod ./client
